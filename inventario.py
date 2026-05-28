@@ -108,9 +108,7 @@ class Inventario(MDP):
 
 if __name__ == "__main__":
 
-    inventario = Inventario(0.95, 4)
-
-    #inventario = Inventario(0.95, 4, (-10, 10), 14, 140, 70, 50, 10, 20)
+    inventario = Inventario(0.95, 8)
 
     pi_star, V = iteracion_valor(inventario)
 
@@ -125,13 +123,51 @@ if __name__ == "__main__":
 """
 Contesta las preguntas aquí mismo (has espacio entre las preguntas):
 
-1. ¿Cómo se comportan las transiciones y las ganancias para casos específicos de $s$ y $a$? 
-2. ¿Qué pasa si hay mucho almacen? 
-3. ¿Que pasa si hay muy poco o estamos sin almacen? 
-4. ¿Existe un punto donde la ganancia sea máxima?  
+Ver resultados.txt
+
+1. ¿Cómo se comportan las transiciones y las ganancias para casos específicos de $s$ y $a$?
+
+De s=-10 a s=5 siempre ordena (o más bien ejecuta la acción) para llegar a 9 unidades en inventario.
+A partir de s=6 no ordena ninguna unidad extra. Esto es porque a partir de s=6 los costos certeros
+superan lo que podría ganarse en ventas y ahorrarse en penalizaciones (en la mayoría de los casos).
+
+2. ¿Qué pasa si hay mucho almacen?
+
+Mientras el almacén no caiga a 5 unidades (s=5), no se ordena nada (a=0). Se paga un costo de almacenamien-
+to por el inventario no vendido al final del día. Si hay mucho almacen simplemente se vende la demanda has-
+ta llegar a 5 unidades o menos.
+
+3. ¿Que pasa si hay muy poco o estamos sin almacen?
+
+Como se describió antes, en cualquier estado menor o igual a 5, se ordenan las unidades necesarias para
+llegar a 9. Si no tenemos almacén, se ordenan 9. Si s es negativa recaudamos costos por inventario nega-
+tivo (backlogging y pérdida).
+
+4. ¿Existe un punto donde la ganancia sea máxima?
+
+Para lambda=4 la ganancia máxima se encuentra en s=9. Es la cantidad de unidades óptima para tener
+en el inventario. Si se compran más, los costos son mayores a las posibles ventas en la mayoría de
+los casos.
+
 ---
+https://www.math.uh.edu/~dlabate/poisson_cdf.pdf
+
 5. ¿Cómo se ve la política óptima? ¿Tiene sentido?
+
+Si. Cuando se llega a 9 unidades se cubre la media y el 99% de la probabilidad de venta para un
+lambda de 4. Cuando se tienen 6 unidades se cubre el ~89% de la probabilidad de venta. Los costos
+de un nuevo pedido para llegar a 9 superan los costos de backlogging que podrían prestarse con una
+probabilidad de solo 11%. En vez de preocuparse por algo que probablemente no ocurra la mejor acción
+es no ordenar y vender hasta que tengamos menos de 6 unidades.
+
 6. ¿Como se comporta la función de valor de estado V(s)?
+
+Crece uniformemente de 80 en 80 desde s=-10 a s=5. A partir de ahí la diferencia varía. Los diferen-
+tes valores por los que crece se pueden observar en los enlaces del archivo "resultados.txt".
+
 7. ¿Cómo cambiaría la política si la variabilidad de la demanda (lambda) aumenta de 4 a 8?
 
+Ahora para todos los estados antes del 11 siempre se elige la acción tal que s=13 y a partir
+de s=11 ya no se ordena ninguna unidad. Aplica la misma lógica de costos que la descrita en la
+pregunta 5.
 """
